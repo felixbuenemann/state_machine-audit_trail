@@ -1,5 +1,5 @@
 class StateMachine::AuditTrail::Backend < Struct.new(:transition_class)
-  def log(object, event, from, to, timestamp = Time.now)
+  def log(object, user, event, from, to, timestamp = Time.now)
     raise NotImplemented, "Implement in a subclass."
   end
 end

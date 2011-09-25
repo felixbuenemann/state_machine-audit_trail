@@ -28,6 +28,7 @@ def create_transition_table(owner_class, state)
   
   ActiveRecord::Base.connection.create_table(class_name.tableize) do |t|
     t.integer owner_class.name.foreign_key
+    t.string :user
     t.string :event
     t.string :from
     t.string :to

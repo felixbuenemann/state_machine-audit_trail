@@ -7,10 +7,11 @@ class StateMachine::AuditTrailGenerator < ::Rails::Generators::Base
   argument :source_model
   argument :state_attribute,  :default => 'state'
   argument :transition_model, :default => ''
+  argument :user_model,       :default => ''
 
 
   def create_model
-    Rails::Generators.invoke('model', [transition_class_name, "#{source_model.tableize.singularize}:references", "event:string", "from:string", "to:string", "created_at:timestamp", '--no-timestamps', '--fixture=false'])
+    Rails::Generators.invoke('model', [transition_class_name, "#{source_model.tableize.singularize}:references", user_model.blank? ? "user:string" : "#{user_model.tableize.singularize}:references", "event:string", "from:string", "to:string", "created_at:timestamp", '--no-timestamps', '--fixture=false'])
   end
   
   protected
