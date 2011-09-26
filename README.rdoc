@@ -34,7 +34,7 @@ If you want to track a related user, provide it using the <tt>:user</tt> option:
 
   class Model < ActiveRecord::Base
     state_machine :state, :initial => :start do
-      store_audit_trail :user => lambda { User.current }
+      store_audit_trail :user => User.current
       ...
 
 That's it! The plugin will register an <tt>after_transition</tt> callback that is used to log all transitions. It will also log the initial state if there is one.
