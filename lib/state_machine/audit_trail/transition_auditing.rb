@@ -7,13 +7,13 @@ module StateMachine::AuditTrail::TransitionAuditing
     state_machine.transition_class_name = (options[:to] || default_transition_class_name).to_s
 
     state_machine.after_transition do |object, transition|
-      user = state_machine.user.class == Proc ? state_machine.user.call : state_machine.user
+      user = state_machine.user(object)
       state_machine.audit_trail.log(object, user, transition.event, transition.from, transition.to)
     end
 
     state_machine.owner_class.after_create do |object|
       if !object.send(state_machine.attribute).nil?
-        user = state_machine.user.class == Proc ? state_machine.user.call : state_machine.user
+        user = state_machine.user(object)
         state_machine.audit_trail.log(object, user, nil, nil, object.send(state_machine.attribute))
       end
     end
@@ -27,8 +27,12 @@ module StateMachine::AuditTrail::TransitionAuditing
     @user = user
   end
 
-  def user
-    @user
+  def user(object = nil)
+    if @user.class == Proc
+      @user.parameters.count == 1 ? @user.call(object) : @user.call
+    else
+      @user
+    end
   end
 
   private

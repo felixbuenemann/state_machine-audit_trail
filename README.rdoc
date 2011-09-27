@@ -34,11 +34,12 @@ If you want to track a related user, provide it using the <tt>:user</tt> option:
 
   class Model < ActiveRecord::Base
     state_machine :state, :initial => :start do
-      store_audit_trail :user => lambda { User.current }
+      store_audit_trail :user => lambda {|object| object.current_user }
       ...
 
 That's it! The plugin will register an <tt>after_transition</tt> callback that is used to log all transitions. It will also log the initial state if there is one.
-If you use user tracking, you might need to add a hook to your controller, to be able to access the logged in user from your model or pass it into the model from your controller.
+
+If you use user tracking, you might need to add a hook to your controller to be able to access the logged in user from your model, or pass it into the model from your controller. You can then access your instance from within the proc. See: http://rails-bestpractices.com/posts/47-fetch-current-user-in-models
 
 == About
 
